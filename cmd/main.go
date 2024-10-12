@@ -11,7 +11,7 @@ import (
 func main() {
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Panic()
+		log.Fatalf("Error loading configuration: %s", err)
 	}
 
 	issueList := redmine.GetIssuesList(*cfg)
