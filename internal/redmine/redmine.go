@@ -3,66 +3,53 @@ package redmine
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"strings"
 
+	"github.com/zonder12120/go-redmine-tg-notify/internal/config"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/http"
-	"github.com/zonder12120/go-redmine-tg-notify/pkg/config"
+	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
 var builder strings.Builder
 
 func GetIssuesList(cfg config.Config) IssuesList {
-	url := makeURL(cfg)
+	url := utils.ConcatStrings([]string{cfg.RedmineBaseURL, "/issues.json?key=", cfg.RedmineAPIKey, getProjectsFilter(), "&limit=100"})
 
-	resp, err := http.Client.Get(url)
-	if err != nil {
-		log.Fatalf("Error sending GET request %s,\nerr: %s", url, err)
-	}
-
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalf("Error read response body from GET req: %s,\nerr: %s", url, err)
-	}
+	body := http.GetRespBody(url)
 
 	var issuesList IssuesList
 
-	err = json.Unmarshal(body, &issuesList)
+	err := json.Unmarshal(body, &issuesList)
 	if err != nil {
-		log.Fatalf("Error encoding body from GET req: %s,\nerr: %s", url, err)
+		log.Fatalf("Error encoding body from GET req: %s,\nerr: %s\n", url, err)
 	}
 
 	return issuesList
 }
 
-func getProjectsFilter() string {
-	pId := config.ProjectsId
+func GetIssueInfo(cfg config.Config, issueId int) Issue {
+	url := utils.ConcatStrings([]string{cfg.RedmineBaseURL, "/issues/", fmt.Sprintf("%v.json", issueId), "?include=journals?key=", cfg.RedmineAPIKey, getProjectsFilter()})
+	body := http.GetRespBody(url)
 
-	for _, id := range pId {
+	var issue Issue
+
+	err := json.Unmarshal(body, &issue)
+	if err != nil {
+		log.Fatalf("Error encoding body from GET req: %s,\nerr: %s\n", url, err)
+	}
+
+	return issue
+}
+
+func getProjectsFilter() string {
+	for _, id := range config.ProjectsId {
 		builder.WriteString(fmt.Sprintf("&project_id=%v", id))
 	}
-	return builder.String()
-}
 
-func connectStrings(s []string) string {
+	filter := builder.String()
+
 	builder.Reset()
-	for _, string := range s {
-		builder.WriteString(string)
-	}
-	return builder.String()
-}
 
-func makeURL(cfg config.Config) string {
-	projectsFilter := getProjectsFilter()
-
-	return connectStrings(
-		[]string{
-			cfg.RedmineBaseURL,
-			"/issues.json?key=",
-			cfg.RedmineAPIKey,
-			projectsFilter,
-		})
+	return filter
 }

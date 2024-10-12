@@ -4,17 +4,24 @@ import (
 	"fmt"
 	"log"
 
+	"time"
+
+	"github.com/zonder12120/go-redmine-tg-notify/internal/config"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/redmine"
-	"github.com/zonder12120/go-redmine-tg-notify/pkg/config"
 )
 
 func main() {
+
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("Error loading configuration: %s", err)
 	}
 
-	issueList := redmine.GetIssuesList(*cfg)
+	for {
+		issueList := redmine.GetIssuesList(*cfg)
 
-	fmt.Println(issueList)
+		fmt.Printf("Получено задач: %v\n", len(issueList.Issues))
+		fmt.Println(issueList)
+		time.Sleep(600)
+	}
 }
