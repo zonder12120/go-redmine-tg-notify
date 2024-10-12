@@ -23,3 +23,12 @@ type IdField struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
 }
+
+type ProjectsList struct {
+	Projects []Project `json:"projects"`
+}
+
+type Project struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
