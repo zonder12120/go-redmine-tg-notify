@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -13,24 +12,23 @@ import (
 var ProjectsId = []int{25}
 
 type Config struct {
-	RedmineBaseURL  string
-	RedmineAPIKey   string
-	TelegramBaseURL string
-	TelegramToken   string
-	ChatID          string
+	RedmineBaseURL string
+	RedmineAPIKey  string
+	TelegramToken  string
+	ChatID         string
 }
 
 func LoadConfig() (*Config, error) {
-	if err := godotenv.Load(); err != nil {
-		return nil, logError("No .env file found, using system environment variables")
+	err := godotenv.Load()
+	if err != nil {
+		return nil, fmt.Errorf("no .env file found, using system environment variables %s", err)
 	}
 
 	cfg := &Config{
-		RedmineBaseURL:  getEnv("REDMINE_BASE_URL", ""),
-		RedmineAPIKey:   getEnv("REDMINE_API_KEY", ""),
-		TelegramBaseURL: getEnv("TELEGRAM_BASE_URL", ""),
-		TelegramToken:   getEnv("TELEGRAM_TOKEN", ""),
-		ChatID:          getEnv("CHAT_ID", ""),
+		RedmineBaseURL: getEnv("REDMINE_BASE_URL", ""),
+		RedmineAPIKey:  getEnv("REDMINE_API_KEY", ""),
+		TelegramToken:  getEnv("TELEGRAM_TOKEN", ""),
+		ChatID:         getEnv("CHAT_ID", ""),
 	}
 
 	return cfg, nil
@@ -44,8 +42,10 @@ func getEnv(key, defaultValue string) string {
 	return defaultValue
 }
 
-func logError(message string) error {
-	err := fmt.Errorf("%s", message)
-	log.Println(err)
-	return err
+func (c *Config) CheckAfterInit() error {
+	if c.RedmineBaseURL == "" || c.RedmineAPIKey == "" || c.TelegramToken == "" || c.ChatID == "" {
+		return fmt.Errorf(".env don't have requried value, check .env file")
+	}
+
+	return nil
 }

@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
-
 	"time"
 
 	"github.com/zonder12120/go-redmine-tg-notify/internal/config"
+	"github.com/zonder12120/go-redmine-tg-notify/internal/notify"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/redmine"
+	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
+
+const defaultTimeout = 6 * time.Second
 
 func main() {
 
@@ -17,11 +20,44 @@ func main() {
 		log.Fatalf("Error loading configuration: %s", err)
 	}
 
-	for {
-		issueList := redmine.GetIssuesList(*cfg)
+	err = cfg.CheckAfterInit()
+	utils.FatalOnError(err)
 
-		fmt.Printf("Получено задач: %v\n", len(issueList.Issues))
-		fmt.Println(issueList)
-		time.Sleep(600)
+	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey)
+
+	oldIssueList, err := rmClient.GetIssuesList()
+	if err != nil {
+		log.Println(err)
+	}
+
+	oldIssuesMap := redmine.MakeMapIssuesList(oldIssueList)
+
+	rmClient.AddJournalsIssuesMap(oldIssuesMap)
+
+	log.Printf("The bot is running")
+	notify.Notify("Бот запущен")
+
+	log.Printf("Initialisation old tasks... (%v)", defaultTimeout)
+	notify.Notify(fmt.Sprintf("Бот работает каждые %v сек", defaultTimeout))
+
+	time.Sleep(defaultTimeout)
+
+	for {
+		newIssueList, err := rmClient.GetIssuesList()
+		if err != nil {
+			log.Println(err)
+		}
+
+		newIssuesMap := redmine.MakeMapIssuesList(newIssueList)
+
+		rmClient.AddJournalsIssuesMap(newIssuesMap)
+
+		rmClient.NotifyUpdates(oldIssuesMap, newIssuesMap)
+
+		log.Printf("ITERATION IS OVER\n\n\n")
+
+		oldIssuesMap = newIssuesMap
+
+		time.Sleep(defaultTimeout)
 	}
 }

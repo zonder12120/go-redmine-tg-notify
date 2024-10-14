@@ -7,7 +7,7 @@ import (
 
 var builder strings.Builder
 
-func ConcatStrings(s []string) (string, error) {
+func ConcatStrings(s ...string) (string, error) {
 	for _, str := range s {
 		_, err := builder.WriteString(str)
 		if err != nil {
