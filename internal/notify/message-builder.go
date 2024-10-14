@@ -63,7 +63,7 @@ func AddNewCommentTxt(str string) (string, error) {
 
 func CreateMsg(issueId int, priorityId int, trackerId int, title string, text string, assignToName string) (string, error) {
 
-	title = fixMarkDown(title)
+	title = markDownFilter(title)
 
 	str, err := utils.ConcatStrings(
 		markTracker(trackerId),
@@ -81,7 +81,7 @@ func CreateMsg(issueId int, priorityId int, trackerId int, title string, text st
 	return str, nil
 }
 
-func fixMarkDown(str string) string {
+func markDownFilter(str string) string {
 	str = strings.ReplaceAll(str, "*", "\\*")
 	str = strings.ReplaceAll(str, "_", "\\_")
 	str = strings.ReplaceAll(str, "[", "\\[")
