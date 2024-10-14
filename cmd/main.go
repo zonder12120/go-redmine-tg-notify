@@ -38,7 +38,7 @@ func main() {
 	notify.Notify("Бот запущен")
 
 	log.Printf("Initialisation old tasks... (%v)", defaultTimeout)
-	notify.Notify(fmt.Sprintf("Бот работает каждые %v сек", defaultTimeout))
+	notify.Notify(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
 
 	time.Sleep(defaultTimeout)
 
