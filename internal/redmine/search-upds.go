@@ -23,12 +23,12 @@ func MakeMapIssuesList(i IssuesList) map[int]Issue {
 // Добавление комментариев в мапу
 func (c *Client) AddJournalsIssuesMap(issueMap map[int]Issue) error {
 	for id, issue := range issueMap {
-		oldIssueInfo, err := c.GetIssueInfo(id)
+		IssueInfo, err := c.GetIssueInfo(id)
 		if err != nil {
 			return fmt.Errorf("error get old issue info %s", err)
 		}
 
-		issue.Journals = oldIssueInfo.Issue.Journals
+		issue.Journals = IssueInfo.Issue.Journals
 
 		issueMap[id] = issue
 	}
@@ -89,9 +89,13 @@ func createDiffMessage(oldIssue, newIssue Issue) (string, error) {
 		builder.WriteString(str)
 	}
 
+	assignedToName := newIssue.AssignedTo.Name
+
 	if oldIssue.AssignedTo.Id != newIssue.AssignedTo.Id {
 		str, err := notify.AddAssignedTxt(oldIssue.AssignedTo.Name, newIssue.AssignedTo.Name)
 		utils.LogErr("Error concat strings on compare issueses priority", err)
+
+		assignedToName = ""
 
 		builder.WriteString(str)
 	}
@@ -102,7 +106,7 @@ func createDiffMessage(oldIssue, newIssue Issue) (string, error) {
 		return "", nil
 	}
 
-	msg, err := notify.CreateMsg(newIssue.Id, newIssue.Priority.Id, newIssue.Tracker.Id, newIssue.Title, text, newIssue.AssignedTo.Name)
+	msg, err := notify.CreateMsg(newIssue.Id, newIssue.Priority.Id, newIssue.Tracker.Id, newIssue.Title, text, assignedToName)
 	if err != nil {
 		return "", err
 	}

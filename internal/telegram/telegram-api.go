@@ -25,12 +25,7 @@ func NewClient(tkn string, id string) *Client {
 func (c *Client) SendMsg(txt string) error {
 	fmt.Println("Отправляем сообщение: ", txt)
 
-	jsonData, err := json.Marshal(
-		Message{
-			ChatId:     c.ChatID,
-			Text:       txt,
-			Parse_mode: "MarkdownV2",
-		})
+	jsonData, err := json.Marshal(newMessage(c.ChatID, txt))
 	if err != nil {
 		return fmt.Errorf("error marshalling data for send message req: %s", err)
 	}

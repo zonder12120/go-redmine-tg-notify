@@ -1,6 +1,7 @@
 package notify
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -9,7 +10,7 @@ import (
 
 func AddStatusTxt(oldStatusName string, newStatusName string) (string, error) {
 	str, err := utils.ConcatStrings(
-		"\\\nизменился статус c ",
+		"\\\n\\-изменился статус c ",
 		"*", oldStatusName, "*",
 		" на ",
 		"*", newStatusName, "*",
@@ -23,9 +24,9 @@ func AddStatusTxt(oldStatusName string, newStatusName string) (string, error) {
 
 func AddPriorityTxt(oldPriorityId int, newPriorityId int) (string, error) {
 	str, err := utils.ConcatStrings(
-		"\\\nизменился приоритет c ",
+		"\\\n\\-изменился приоритет c ",
 		"*", oldPriorString(oldPriorityId), "*",
-		"на ",
+		" на ",
 		"*", newPriorString(newPriorityId), "*",
 	)
 	if err != nil {
@@ -37,9 +38,9 @@ func AddPriorityTxt(oldPriorityId int, newPriorityId int) (string, error) {
 
 func AddAssignedTxt(oldAssigned string, newAssigned string) (string, error) {
 	str, err := utils.ConcatStrings(
-		"\\\nизменился исполнитель c ",
+		"\\\n\\-изменился исполнитель c ",
 		"*", oldAssigned, "*",
-		"на ",
+		" на ",
 		"*", newAssigned, "*",
 	)
 	if err != nil {
@@ -51,7 +52,7 @@ func AddAssignedTxt(oldAssigned string, newAssigned string) (string, error) {
 
 func AddNewCommentTxt(str string) (string, error) {
 	str, err := utils.ConcatStrings(
-		"\\\nбыл добавлен комментарий: ",
+		"\\\n\\-был добавлен комментарий: ",
 		"*", str, "*",
 	)
 	if err != nil {
@@ -65,6 +66,15 @@ func CreateMsg(issueId int, priorityId int, trackerId int, title string, text st
 
 	title = markDownFilter(title)
 
+	assignStr, err := utils.ConcatStrings("\\\nИсполнитель *", assignToName, "*")
+	if err != nil {
+		return "", fmt.Errorf("error concat strings to create assigned str in msg-builder: %s", err)
+	}
+
+	if assignToName == "" {
+		assignStr = ""
+	}
+
 	str, err := utils.ConcatStrings(
 		markTracker(trackerId),
 		markPriority(priorityId),
@@ -72,10 +82,10 @@ func CreateMsg(issueId int, priorityId int, trackerId int, title string, text st
 		"(", cfg.RedmineBaseURL, "/issues/", strconv.Itoa(issueId), ")",
 		" \\- ", title,
 		text,
-		"\\\nИсполнитель *", assignToName, "*",
+		assignStr,
 	)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error create message in msg-builder: %s", err)
 	}
 
 	return str, nil

@@ -1,10 +1,10 @@
 package config
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-
-	"github.com/joho/godotenv"
+	"strings"
 )
 
 // Здесь прописываем проекты, которые должны отслеживаться
@@ -19,32 +19,55 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, error) {
-	err := godotenv.Load()
+	err := loadEnv()
 	if err != nil {
-		return nil, fmt.Errorf("no .env file found, using system environment variables %s", err)
+		return nil, err
 	}
 
 	cfg := &Config{
-		RedmineBaseURL: getEnv("REDMINE_BASE_URL", ""),
-		RedmineAPIKey:  getEnv("REDMINE_API_KEY", ""),
-		TelegramToken:  getEnv("TELEGRAM_TOKEN", ""),
-		ChatID:         getEnv("CHAT_ID", ""),
+		RedmineBaseURL: os.Getenv("REDMINE_BASE_URL"),
+		RedmineAPIKey:  os.Getenv("REDMINE_API_KEY"),
+		TelegramToken:  os.Getenv("TELEGRAM_TOKEN"),
+		ChatID:         os.Getenv("CHAT_ID"),
 	}
 
 	return cfg, nil
 }
 
-func getEnv(key, defaultValue string) string {
-	value, exists := os.LookupEnv(key)
-	if exists {
-		return value
-	}
-	return defaultValue
-}
-
 func (c *Config) CheckAfterInit() error {
 	if c.RedmineBaseURL == "" || c.RedmineAPIKey == "" || c.TelegramToken == "" || c.ChatID == "" {
 		return fmt.Errorf(".env don't have requried value, check .env file")
+	}
+
+	return nil
+}
+
+func loadEnv() error {
+	file, err := os.Open(".env")
+	if os.IsNotExist(err) {
+		return fmt.Errorf("no .env file found, using system environment variables: %s", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "#") || len(strings.TrimSpace(line)) == 0 {
+			continue
+		}
+
+		keyValue := strings.SplitN(line, "=", 2)
+		if len(keyValue) != 2 {
+			return fmt.Errorf("invalid line in .env file: %s", line)
+		}
+		key := strings.TrimSpace(keyValue[0])
+		value := strings.TrimSpace(keyValue[1])
+
+		os.Setenv(key, value)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("error reading .env file: %s", err)
 	}
 
 	return nil
