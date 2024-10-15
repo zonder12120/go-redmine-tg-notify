@@ -15,6 +15,7 @@ const defaultTimeout = 6 * time.Second
 
 func main() {
 
+	// Инициализирует .env + в config.go находится слайс id проектов, по которым мы хотим получать оповещения
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("Error loading configuration: %s", err)
@@ -23,7 +24,11 @@ func main() {
 	err = cfg.CheckAfterInit()
 	utils.FatalOnError(err)
 
-	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey)
+	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey, cfg.ProjectsId)
+
+	// Вывод в консоль всех имеющихся проектов, их id и соответствующего имени для конфига
+	// Начинается вывод списка с оглавления "Projects List:"
+	rmClient.GetProjectsList()
 
 	oldIssueList, err := rmClient.GetIssuesList()
 	if err != nil {

@@ -8,7 +8,7 @@ import (
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
-func AddStatusTxt(oldStatusName string, newStatusName string) (string, error) {
+func AddStatusTxt(oldStatusName, newStatusName string) (string, error) {
 	str, err := utils.ConcatStrings(
 		"\\\n\\-изменился статус c ",
 		"*", oldStatusName, "*",
@@ -22,7 +22,7 @@ func AddStatusTxt(oldStatusName string, newStatusName string) (string, error) {
 	return str, nil
 }
 
-func AddPriorityTxt(oldPriorityId int, newPriorityId int) (string, error) {
+func AddPriorityTxt(oldPriorityId, newPriorityId int) (string, error) {
 	str, err := utils.ConcatStrings(
 		"\\\n\\-изменился приоритет c ",
 		"*", oldPriorString(oldPriorityId), "*",
@@ -36,7 +36,7 @@ func AddPriorityTxt(oldPriorityId int, newPriorityId int) (string, error) {
 	return str, nil
 }
 
-func AddAssignedTxt(oldAssigned string, newAssigned string) (string, error) {
+func AddAssignedTxt(oldAssigned, newAssigned string) (string, error) {
 	str, err := utils.ConcatStrings(
 		"\\\n\\-изменился исполнитель c ",
 		"*", oldAssigned, "*",
@@ -91,6 +91,7 @@ func CreateMsg(issueId int, priorityId int, trackerId int, title string, text st
 	return str, nil
 }
 
+// Добавляем экранирование для спец символов MarkdownV2, чтобы telegram смог распарсить текст
 func markDownFilter(str string) string {
 	str = strings.ReplaceAll(str, "*", "\\*")
 	str = strings.ReplaceAll(str, "_", "\\_")

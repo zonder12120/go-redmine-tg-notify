@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/zonder12120/go-redmine-tg-notify/internal/config"
 	httpreq "github.com/zonder12120/go-redmine-tg-notify/internal/http-req"
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
@@ -12,19 +11,21 @@ import (
 type Client struct {
 	RedmineBaseURL string
 	RedmineAPIKey  string
+	ProjectsId     []int
 }
 
-func NewClient(url string, key string) *Client {
+func NewClient(url string, key string, projectsId []int) *Client {
 	return &Client{
 		RedmineBaseURL: url,
 		RedmineAPIKey:  key,
+		ProjectsId:     projectsId,
 	}
 }
 
 func (c *Client) GetIssuesList() (IssuesList, error) {
 	var issuesList IssuesList
 
-	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/issues.json?key=", c.RedmineAPIKey, getProjectsFilter(), "&limit=100")
+	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/issues.json?key=", c.RedmineAPIKey, getProjectsFilter(c.ProjectsId), "&limit=100")
 	if err != nil {
 		return issuesList, fmt.Errorf("error concat strings for get issues request %s", err)
 	}
@@ -62,29 +63,42 @@ func (c *Client) GetIssueInfo(issueId int) (IssueInfo, error) {
 	return issueInfo, nil
 }
 
-func (c *Client) GetProjectsList() (ProjectsList, error) {
+func (c *Client) GetProjectsList() error {
 	var projectsList ProjectsList
 
 	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/projects.json?key=", c.RedmineAPIKey)
 	if err != nil {
-		return projectsList, utils.HadleError("Error get project list req", err)
+		return utils.HadleError("Error get project list req", err)
 	}
 
 	body, err := httpreq.GetRespBody(url)
 	if err != nil {
-		return projectsList, err
+		return err
 	}
 
 	err = json.Unmarshal(body, &projectsList)
 	if err != nil {
-		return projectsList, utils.HadleError("Error encoding body from get project list req", err)
+		return utils.HadleError("Error encoding body from get project list req", err)
 	}
 
-	return projectsList, nil
+	outputProjectList(projectsList)
+
+	return nil
 }
 
-func getProjectsFilter() string {
-	for _, id := range config.ProjectsId {
+func outputProjectList(pl ProjectsList) {
+	fmt.Println("Projects List:")
+	for index, p := range pl.Projects {
+		fmt.Printf("id: %d, name: %s\n", p.Id, p.Name)
+
+		if index == len(pl.Projects)-1 {
+			fmt.Println("")
+		}
+	}
+}
+
+func getProjectsFilter(projectsId []int) string {
+	for _, id := range projectsId {
 		builder.WriteString(fmt.Sprintf("&project_id=%v", id))
 	}
 

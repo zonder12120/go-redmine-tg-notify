@@ -1,7 +1,7 @@
 package notify
 
-func oldPriorString(p int) string {
-	switch p {
+func oldPriorString(pId int) string {
+	switch pId {
 	case 5:
 		return "нулевого"
 	case 4:
@@ -15,8 +15,8 @@ func oldPriorString(p int) string {
 	}
 }
 
-func newPriorString(p int) string {
-	switch p {
+func newPriorString(pId int) string {
+	switch pId {
 	case 5:
 		return "нулевой"
 	case 4:
@@ -30,8 +30,8 @@ func newPriorString(p int) string {
 	}
 }
 
-func markPriority(p int) string {
-	switch p {
+func markPriority(pId int) string {
+	switch pId {
 	case 5:
 		return "\U00002B24 " // Эмодзи: 🔶
 	case 4:
@@ -45,8 +45,8 @@ func markPriority(p int) string {
 	}
 }
 
-func markTracker(t int) string {
-	switch t {
+func markTracker(tId int) string {
+	switch tId {
 	case 4:
 		return "\U0001F4B0 " // Эмодзи: 💰
 	default:
