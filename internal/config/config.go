@@ -12,7 +12,7 @@ type Config struct {
 	RedmineAPIKey  string // Ваш api-key для Redmine
 	TelegramToken  string // Токен для бота (BotFather)
 	ChatID         string // id чата, где будет спамить бот (Get My ID)
-	ProjectsId     []int  // слайс id проектов, по которым ты хочешь получать оповещения
+	ProjectsID     []int  // слайс id проектов, по которым ты хочешь получать оповещения
 }
 
 func LoadConfig() (Config, error) {
@@ -26,14 +26,14 @@ func LoadConfig() (Config, error) {
 		RedmineAPIKey:  os.Getenv("REDMINE_API_KEY"),
 		TelegramToken:  os.Getenv("TELEGRAM_TOKEN"),
 		ChatID:         os.Getenv("CHAT_ID"),
-		ProjectsId:     env.GetSliceIntFromEnv("PROJECTS_LIST"),
+		ProjectsID:     env.GetSliceIntFromEnv("PROJECTS_LIST"),
 	}
 
 	return cfg, nil
 }
 
 func (c *Config) CheckAfterInit() error {
-	if c.RedmineBaseURL == "" || c.RedmineAPIKey == "" || c.TelegramToken == "" || c.ChatID == "" || c.ProjectsId == nil {
+	if c.RedmineBaseURL == "" || c.RedmineAPIKey == "" || c.TelegramToken == "" || c.ChatID == "" || c.ProjectsID == nil {
 		return fmt.Errorf(".env don't have requried value, check .env file")
 	}
 

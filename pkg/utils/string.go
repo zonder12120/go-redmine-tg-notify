@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-var builder strings.Builder
-
 func ConcatStrings(s ...string) (string, error) {
+	var builder strings.Builder
+
 	for _, str := range s {
 		_, err := builder.WriteString(str)
 		if err != nil {

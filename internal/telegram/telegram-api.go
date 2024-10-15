@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	httpreq "github.com/zonder12120/go-redmine-tg-notify/internal/http-req"
+	httpreq "github.com/zonder12120/go-redmine-tg-notify/internal/httpreq"
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
@@ -23,8 +23,6 @@ func NewClient(tkn string, id string) *Client {
 }
 
 func (c *Client) SendMsg(txt string) error {
-	fmt.Println("Отправляем сообщение: ", txt)
-
 	jsonData, err := json.Marshal(newMessage(c.ChatID, txt))
 	if err != nil {
 		return fmt.Errorf("error marshalling data for send message req: %s", err)

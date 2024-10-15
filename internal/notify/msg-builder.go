@@ -22,12 +22,12 @@ func AddStatusTxt(oldStatusName, newStatusName string) (string, error) {
 	return str, nil
 }
 
-func AddPriorityTxt(oldPriorityId, newPriorityId int) (string, error) {
+func AddPriorityTxt(oldPriorityID, newPriorityID int) (string, error) {
 	str, err := utils.ConcatStrings(
 		"\\\n\\-изменился приоритет c ",
-		"*", oldPriorString(oldPriorityId), "*",
+		"*", oldPriorString(oldPriorityID), "*",
 		" на ",
-		"*", newPriorString(newPriorityId), "*",
+		"*", newPriorString(newPriorityID), "*",
 	)
 	if err != nil {
 		return "", err
@@ -62,7 +62,7 @@ func AddNewCommentTxt(str string) (string, error) {
 	return str, nil
 }
 
-func CreateMsg(issueId int, priorityId int, trackerId int, title string, text string, assignToName string) (string, error) {
+func CreateMsg(issueID int, priorityID int, trackerID int, title string, text string, assignToName string) (string, error) {
 
 	title = markDownFilter(title)
 
@@ -76,10 +76,10 @@ func CreateMsg(issueId int, priorityId int, trackerId int, title string, text st
 	}
 
 	str, err := utils.ConcatStrings(
-		markTracker(trackerId),
-		markPriority(priorityId),
-		"В задаче [", strconv.Itoa(issueId), "]",
-		"(", cfg.RedmineBaseURL, "/issues/", strconv.Itoa(issueId), ")",
+		markTracker(trackerID),
+		markPriority(priorityID),
+		"В задаче [", strconv.Itoa(issueID), "]",
+		"(", cfg.RedmineBaseURL, "/issues/", strconv.Itoa(issueID), ")",
 		" \\- ", title,
 		text,
 		assignStr,

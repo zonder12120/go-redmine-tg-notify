@@ -9,12 +9,10 @@ import (
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
-var builder strings.Builder
-
 func MakeMapIssuesList(i IssuesList) map[int]Issue {
 	m := make(map[int]Issue, len(i.Issues))
 	for _, issue := range i.Issues {
-		m[issue.Id] = issue
+		m[issue.ID] = issue
 	}
 
 	return m
@@ -39,42 +37,42 @@ func (c *Client) AddJournalsIssuesMap(issueMap map[int]Issue) error {
 func (c *Client) NotifyUpdates(oldIssueMap, newIssueMap map[int]Issue) {
 
 	// Сравниваем старые задачи с новыми
-	for newIssueId, newIssue := range newIssueMap {
+	for newIssueID, newIssue := range newIssueMap {
 
-		oldIssue, exists := oldIssueMap[newIssueId]
+		oldIssue, exists := oldIssueMap[newIssueID]
 
 		// Если есть новая задача, сразу создаём оповещение
 		if !exists {
-			err := notify.NotifyNewTask(newIssueId, newIssue.Priority.Id, newIssue.Title, newIssue.AssignedTo.Name)
-			utils.LogErr(fmt.Sprintf("Error notify new task number %v", newIssueId), err)
+			err := notify.NotifyNewTask(newIssueID, newIssue.Priority.ID, newIssue.Title, newIssue.AssignedTo.Name)
+			utils.LogErr(fmt.Sprintf("Error notify new task number %v", newIssueID), err)
 
 			continue
 		}
 
 		msg, err := createDiffMessage(oldIssue, newIssue)
-		utils.LogErr(fmt.Sprintf("Error create msg for task number %v", newIssueId), err)
+		utils.LogErr(fmt.Sprintf("Error create msg for task number %v", newIssueID), err)
 
 		if msg != "" {
 			err := notify.Notify(msg)
 			if err != nil {
-				log.Printf("Error send message to chat: %s\n", err)
+				log.Println("Error send message to chat: ", err)
 			}
 		}
 	}
 }
 
 func createDiffMessage(oldIssue, newIssue Issue) (string, error) {
-	builder.Reset()
+	var builder strings.Builder
 
-	if oldIssue.Status.Id != newIssue.Status.Id {
+	if oldIssue.Status.ID != newIssue.Status.ID {
 		str, err := notify.AddStatusTxt(oldIssue.Status.Name, newIssue.Status.Name)
 		utils.LogErr("Error add issueses status text", err)
 
 		builder.WriteString(str)
 	}
 
-	if oldIssue.Priority.Id != newIssue.Priority.Id {
-		str, err := notify.AddPriorityTxt(oldIssue.Priority.Id, newIssue.Priority.Id)
+	if oldIssue.Priority.ID != newIssue.Priority.ID {
+		str, err := notify.AddPriorityTxt(oldIssue.Priority.ID, newIssue.Priority.ID)
 		utils.LogErr("Error add issueses priority text", err)
 
 		builder.WriteString(str)
@@ -91,7 +89,7 @@ func createDiffMessage(oldIssue, newIssue Issue) (string, error) {
 
 	assignedToName := newIssue.AssignedTo.Name
 
-	if oldIssue.AssignedTo.Id != newIssue.AssignedTo.Id {
+	if oldIssue.AssignedTo.ID != newIssue.AssignedTo.ID {
 		str, err := notify.AddAssignedTxt(oldIssue.AssignedTo.Name, newIssue.AssignedTo.Name)
 		utils.LogErr("Error concat strings on compare issueses priority", err)
 
@@ -106,7 +104,7 @@ func createDiffMessage(oldIssue, newIssue Issue) (string, error) {
 		return "", nil
 	}
 
-	msg, err := notify.CreateMsg(newIssue.Id, newIssue.Priority.Id, newIssue.Tracker.Id, newIssue.Title, text, assignedToName)
+	msg, err := notify.CreateMsg(newIssue.ID, newIssue.Priority.ID, newIssue.Tracker.ID, newIssue.Title, text, assignedToName)
 	if err != nil {
 		return "", err
 	}

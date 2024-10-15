@@ -34,31 +34,31 @@ func TestAddStatusTxt(t *testing.T) {
 
 func TestAddPriorityTxt(t *testing.T) {
 	testTable := []struct {
-		oldPriorityId int
-		newPriorityId int
+		oldPriorityID int
+		newPriorityID int
 		expected      string
 	}{
 		{
-			oldPriorityId: 4,
-			newPriorityId: 5,
+			oldPriorityID: 4,
+			newPriorityID: 5,
 			expected:      "\\\n\\-изменился приоритет c *Первого* на *Нулевой*",
 		},
 		{
-			oldPriorityId: 6,
-			newPriorityId: 5,
+			oldPriorityID: 6,
+			newPriorityID: 5,
 			expected:      "\\\n\\-изменился приоритет c *?* на *Нулевой*",
 		},
 		{
-			oldPriorityId: 4,
-			newPriorityId: 1,
+			oldPriorityID: 4,
+			newPriorityID: 1,
 			expected:      "\\\n\\-изменился приоритет c *Первого* на *?*",
 		},
 	}
 
 	for _, tstCase := range testTable {
-		result, err := AddPriorityTxt(tstCase.oldPriorityId, tstCase.newPriorityId)
+		result, err := AddPriorityTxt(tstCase.oldPriorityID, tstCase.newPriorityID)
 
-		//t.Logf("Calling AddStatusTxt(%d, %d), result: %s", tstCase.oldPriorityId, tstCase.newPriorityId, result)
+		//t.Logf("Calling AddStatusTxt(%d, %d), result: %s", tstCase.oldPriorityID, tstCase.newPriorityID, result)
 
 		if err != nil {
 			t.Errorf("Should not produce an error %s", err)
@@ -145,27 +145,27 @@ func TestAddNewCommentTxt(t *testing.T) {
 
 func TestCreateMsg(t *testing.T) {
 	testTable := []struct {
-		issueId      int
-		priorityId   int
-		trackerId    int
+		issueID      int
+		priorityID   int
+		trackerID    int
 		title        string
 		text         string
 		assignToName string
 		expected     string
 	}{
 		{
-			issueId:      0,
-			priorityId:   3,
-			trackerId:    4,
+			issueID:      0,
+			priorityID:   3,
+			trackerID:    4,
 			title:        "Тестовая задача",
 			text:         "\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*",
 			assignToName: "Тестов Тест",
 			expected:     "\U0001F4B0 \U0001F7E1 В задаче [0](/issues/0) \\- Тестовая задача\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*\\\nИсполнитель *Тестов Тест*",
 		},
 		{
-			issueId:      0,
-			priorityId:   3,
-			trackerId:    4,
+			issueID:      0,
+			priorityID:   3,
+			trackerID:    4,
 			title:        "*Тестовая_задача[]()~><#+-=|.!",
 			text:         "\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*",
 			assignToName: "Тестов Тест",
@@ -174,9 +174,9 @@ func TestCreateMsg(t *testing.T) {
 	}
 
 	for _, tstCase := range testTable {
-		result, err := CreateMsg(tstCase.issueId, tstCase.priorityId, tstCase.trackerId, tstCase.title, tstCase.text, tstCase.assignToName)
+		result, err := CreateMsg(tstCase.issueID, tstCase.priorityID, tstCase.trackerID, tstCase.title, tstCase.text, tstCase.assignToName)
 
-		//t.Logf("Calling AddStatusTxt(%d, %d, %d, %s, %s, %s), result: %s", tstCase.issueId, tstCase.priorityId, tstCase.trackerId, tstCase.title, tstCase.text, tstCase.assignToName, result)
+		//t.Logf("Calling AddStatusTxt(%d, %d, %d, %s, %s, %s), result: %s", tstCase.issueID, tstCase.priorityID, tstCase.trackerID, tstCase.title, tstCase.text, tstCase.assignToName, result)
 
 		if err != nil {
 			t.Errorf("Should not produce an error %s", err)

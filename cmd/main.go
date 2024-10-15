@@ -24,7 +24,7 @@ func main() {
 	err = cfg.CheckAfterInit()
 	utils.FatalOnError(err)
 
-	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey, cfg.ProjectsId)
+	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey, cfg.ProjectsID)
 
 	// Вывод в консоль всех имеющихся проектов, их id и соответствующего имени для конфига
 	// Начинается вывод списка с оглавления "Projects List:"
@@ -39,7 +39,7 @@ func main() {
 
 	rmClient.AddJournalsIssuesMap(oldIssuesMap)
 
-	log.Printf("The bot is running")
+	log.Println("The bot is running")
 	notify.Notify("Бот запущен")
 
 	log.Printf("Initialisation old tasks... (%v)", defaultTimeout)

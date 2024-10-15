@@ -3,29 +3,30 @@ package redmine
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
-	httpreq "github.com/zonder12120/go-redmine-tg-notify/internal/http-req"
+	httpreq "github.com/zonder12120/go-redmine-tg-notify/internal/httpreq"
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
 type Client struct {
 	RedmineBaseURL string
 	RedmineAPIKey  string
-	ProjectsId     []int
+	ProjectsID     []int
 }
 
-func NewClient(url string, key string, projectsId []int) *Client {
+func NewClient(url string, key string, projectsID []int) *Client {
 	return &Client{
 		RedmineBaseURL: url,
 		RedmineAPIKey:  key,
-		ProjectsId:     projectsId,
+		ProjectsID:     projectsID,
 	}
 }
 
 func (c *Client) GetIssuesList() (IssuesList, error) {
 	var issuesList IssuesList
 
-	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/issues.json?key=", c.RedmineAPIKey, getProjectsFilter(c.ProjectsId), "&limit=100")
+	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/issues.json?key=", c.RedmineAPIKey, getProjectsFilter(c.ProjectsID), "&limit=100")
 	if err != nil {
 		return issuesList, fmt.Errorf("error concat strings for get issues request %s", err)
 	}
@@ -42,10 +43,10 @@ func (c *Client) GetIssuesList() (IssuesList, error) {
 	return issuesList, nil
 }
 
-func (c *Client) GetIssueInfo(issueId int) (IssueInfo, error) {
+func (c *Client) GetIssueInfo(issueID int) (IssueInfo, error) {
 	var issueInfo IssueInfo
 
-	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/issues/", fmt.Sprintf("%v.json", issueId), "?include=journals&key=", c.RedmineAPIKey, "&limit=100")
+	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/issues/", fmt.Sprintf("%v.json", issueID), "?include=journals&key=", c.RedmineAPIKey, "&limit=100")
 	if err != nil {
 		return issueInfo, err
 	}
@@ -68,7 +69,7 @@ func (c *Client) GetProjectsList() error {
 
 	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/projects.json?key=", c.RedmineAPIKey)
 	if err != nil {
-		return utils.HadleError("Error get project list req", err)
+		return fmt.Errorf("еrror get project list req: %s", err)
 	}
 
 	body, err := httpreq.GetRespBody(url)
@@ -78,7 +79,7 @@ func (c *Client) GetProjectsList() error {
 
 	err = json.Unmarshal(body, &projectsList)
 	if err != nil {
-		return utils.HadleError("Error encoding body from get project list req", err)
+		return fmt.Errorf("error encoding body from get project list req %s", err)
 	}
 
 	outputProjectList(projectsList)
@@ -89,7 +90,7 @@ func (c *Client) GetProjectsList() error {
 func outputProjectList(pl ProjectsList) {
 	fmt.Println("Projects List:")
 	for index, p := range pl.Projects {
-		fmt.Printf("id: %d, name: %s\n", p.Id, p.Name)
+		fmt.Printf("id: %d, name: %s\n", p.ID, p.Name)
 
 		if index == len(pl.Projects)-1 {
 			fmt.Println("")
@@ -97,8 +98,10 @@ func outputProjectList(pl ProjectsList) {
 	}
 }
 
-func getProjectsFilter(projectsId []int) string {
-	for _, id := range projectsId {
+func getProjectsFilter(projectsID []int) string {
+	var builder strings.Builder
+
+	for _, id := range projectsID {
 		builder.WriteString(fmt.Sprintf("&project_id=%v", id))
 	}
 

@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
-var client = http.DefaultClient
+var client = &http.Client{
+	Timeout: 10 * time.Second,
+}
 
 func GetRespBody(url string) ([]byte, error) {
 	resp, err := client.Get(url)
@@ -34,8 +37,6 @@ func PostReq(url string, jsonData []byte) error {
 	if err != nil {
 		return fmt.Errorf("error sending POST request: %s", err)
 	}
-
-	fmt.Println("Отправили вот такое тело: ", string(jsonData))
 
 	defer resp.Body.Close()
 

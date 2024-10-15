@@ -16,24 +16,24 @@ type Issue struct {
 	UpdateTime  string    `json:"updated_on"`
 	ClosedTime  string    `json:"closed_on"`
 	Description string    `json:"description"`
-	AssignedTo  IdField   `json:"assigned_to"`
-	Project     IdField   `json:"project"`
-	Tracker     IdField   `json:"tracker"`
-	Status      IdField   `json:"status"`
-	Priority    IdField   `json:"priority"`
-	Id          int       `json:"id"`
+	AssignedTo  IDField   `json:"assigned_to"`
+	Project     IDField   `json:"project"`
+	Tracker     IDField   `json:"tracker"`
+	Status      IDField   `json:"status"`
+	Priority    IDField   `json:"priority"`
+	ID          int       `json:"id"`
 }
 
-type IdField struct {
-	Id   int    `json:"id"`
+type IDField struct {
+	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 
 type Journal struct {
-	Id    int    `json:"id"`
+	ID    int    `json:"id"`
 	Notes string `json:"notes"`
 }
 
 type ProjectsList struct {
-	Projects []IdField `json:"projects"`
+	Projects []IDField `json:"projects"`
 }
