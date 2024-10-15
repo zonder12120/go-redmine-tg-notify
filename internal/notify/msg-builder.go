@@ -3,7 +3,6 @@ package notify
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
@@ -64,7 +63,7 @@ func AddNewCommentTxt(str string) (string, error) {
 
 func CreateMsg(issueID int, priorityID int, trackerID int, title string, text string, assignToName string) (string, error) {
 
-	title = markDownFilter(title)
+	title = utils.MarkDownFilter(title)
 
 	assignStr, err := utils.ConcatStrings("\\\nИсполнитель *", assignToName, "*")
 	if err != nil {
@@ -92,23 +91,3 @@ func CreateMsg(issueID int, priorityID int, trackerID int, title string, text st
 }
 
 // Добавляем экранирование для спец символов MarkdownV2, чтобы telegram смог распарсить текст
-func markDownFilter(str string) string {
-	str = strings.ReplaceAll(str, "*", "\\*")
-	str = strings.ReplaceAll(str, "_", "\\_")
-	str = strings.ReplaceAll(str, "[", "\\[")
-	str = strings.ReplaceAll(str, "]", "\\]")
-	str = strings.ReplaceAll(str, "(", "\\(")
-	str = strings.ReplaceAll(str, ")", "\\)")
-	str = strings.ReplaceAll(str, "~", "\\~")
-	str = strings.ReplaceAll(str, ">", "\\>")
-	str = strings.ReplaceAll(str, "<", "\\<")
-	str = strings.ReplaceAll(str, "#", "\\#")
-	str = strings.ReplaceAll(str, "+", "\\+")
-	str = strings.ReplaceAll(str, "-", "\\-")
-	str = strings.ReplaceAll(str, "=", "\\=")
-	str = strings.ReplaceAll(str, "|", "\\|")
-	str = strings.ReplaceAll(str, ".", "\\.")
-	str = strings.ReplaceAll(str, "!", "\\!")
-
-	return str
-}
