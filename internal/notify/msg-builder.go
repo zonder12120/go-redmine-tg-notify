@@ -36,12 +36,12 @@ func AddPriorityTxt(oldPriorityId, newPriorityId int) (string, error) {
 	return str, nil
 }
 
-func AddAssignedTxt(oldAssigned, newAssigned string) (string, error) {
+func AddAssignedTxt(oldAssignedToName, newAssignedToName string) (string, error) {
 	str, err := utils.ConcatStrings(
 		"\\\n\\-изменился исполнитель c ",
-		"*", oldAssigned, "*",
+		"*", oldAssignedToName, "*",
 		" на ",
-		"*", newAssigned, "*",
+		"*", newAssignedToName, "*",
 	)
 	if err != nil {
 		return "", err
@@ -53,7 +53,7 @@ func AddAssignedTxt(oldAssigned, newAssigned string) (string, error) {
 func AddNewCommentTxt(str string) (string, error) {
 	str, err := utils.ConcatStrings(
 		"\\\n\\-был добавлен комментарий: ",
-		"*", str, "*",
+		"*\\\"", str, "\\\"*",
 	)
 	if err != nil {
 		return "", err
@@ -101,6 +101,7 @@ func markDownFilter(str string) string {
 	str = strings.ReplaceAll(str, ")", "\\)")
 	str = strings.ReplaceAll(str, "~", "\\~")
 	str = strings.ReplaceAll(str, ">", "\\>")
+	str = strings.ReplaceAll(str, "<", "\\<")
 	str = strings.ReplaceAll(str, "#", "\\#")
 	str = strings.ReplaceAll(str, "+", "\\+")
 	str = strings.ReplaceAll(str, "-", "\\-")

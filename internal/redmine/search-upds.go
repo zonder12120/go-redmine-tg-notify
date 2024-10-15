@@ -68,7 +68,7 @@ func createDiffMessage(oldIssue, newIssue Issue) (string, error) {
 
 	if oldIssue.Status.Id != newIssue.Status.Id {
 		str, err := notify.AddStatusTxt(oldIssue.Status.Name, newIssue.Status.Name)
-		utils.HadleError("Error add issueses status text", err)
+		utils.LogErr("Error add issueses status text", err)
 
 		builder.WriteString(str)
 	}
@@ -82,7 +82,7 @@ func createDiffMessage(oldIssue, newIssue Issue) (string, error) {
 
 	newComment := compareIssuesJournals(oldIssue, newIssue)
 
-	if newComment != "" {
+	if strings.TrimSpace(newComment) != "" {
 		str, err := notify.AddNewCommentTxt(newComment)
 		utils.LogErr("Error concat strings on compare issueses comments", err)
 

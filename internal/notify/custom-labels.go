@@ -3,13 +3,13 @@ package notify
 func oldPriorString(pId int) string {
 	switch pId {
 	case 5:
-		return "нулевого"
+		return "Нулевого"
 	case 4:
-		return "первого"
+		return "Первого"
 	case 3:
-		return "второго"
+		return "Второго"
 	case 2:
-		return "третьего"
+		return "Третьего"
 	default:
 		return "?"
 	}
@@ -18,13 +18,13 @@ func oldPriorString(pId int) string {
 func newPriorString(pId int) string {
 	switch pId {
 	case 5:
-		return "нулевой"
+		return "Нулевой"
 	case 4:
-		return "первый"
+		return "Первый"
 	case 3:
-		return "второй"
+		return "Второй"
 	case 2:
-		return "третий"
+		return "Третий"
 	default:
 		return "?"
 	}
