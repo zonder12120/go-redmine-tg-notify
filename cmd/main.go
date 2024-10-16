@@ -15,7 +15,15 @@ const defaultTimeout = 6 * time.Second
 
 func main() {
 
-	// Инициализирует .env + в config.go находится слайс id проектов, по которым мы хотим получать оповещения
+	// Срез номеров задач, которые будут игнорироваться при оповещениях
+	var ignoredIssues = []int{
+		71060,
+	}
+
+	// Инициализирует мапу задач, которые будут игнорироваться (для скорости обнаружения совпадений)
+	ignoredIssuesMap := redmine.InitIgnoredIssuesMap(ignoredIssues)
+
+	// Инициализирует .env
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("Error loading configuration: %s", err)
@@ -24,7 +32,7 @@ func main() {
 	err = cfg.CheckAfterInit()
 	utils.FatalOnError(err)
 
-	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey, cfg.ProjectsID)
+	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey, cfg.ProjectsID, cfg.GoogleDevApiKey)
 
 	// Вывод в консоль всех имеющихся проектов, их id и соответствующего имени для конфига
 	// Начинается вывод списка с оглавления "Projects List:"
@@ -39,11 +47,14 @@ func main() {
 
 	rmClient.AddJournalsIssuesMap(oldIssuesMap)
 
-	log.Println("The bot is running")
-	notify.Notify("Бот запущен")
+	if redmine.IsWorkTime(cfg.GoogleDevApiKey) {
+		notify.Notify("Бот запущен")
+		notify.Notify(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
+	}
 
-	log.Printf("Initialisation old tasks... (%v)", defaultTimeout)
-	notify.Notify(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
+	log.Println("The bot is running")
+
+	log.Println("Initialisation new tasks...")
 
 	time.Sleep(defaultTimeout)
 
@@ -57,7 +68,7 @@ func main() {
 
 		rmClient.AddJournalsIssuesMap(newIssuesMap)
 
-		rmClient.NotifyUpdates(oldIssuesMap, newIssuesMap)
+		rmClient.NotifyUpdates(oldIssuesMap, newIssuesMap, ignoredIssuesMap)
 
 		log.Printf("ITERATION IS OVER\n\n\n")
 

@@ -1,5 +1,0 @@
-package notify
-
-func IsWorkTime() {
-
-}

@@ -8,11 +8,12 @@ import (
 )
 
 type Config struct {
-	RedmineBaseURL string // URL вашего Redmine
-	RedmineAPIKey  string // Ваш api-key для Redmine
-	TelegramToken  string // Токен для бота (BotFather)
-	ChatID         string // id чата, где будет спамить бот (Get My ID)
-	ProjectsID     []int  // слайс id проектов, по которым ты хочешь получать оповещения
+	ProjectsID      []int  // Слайс ID проектов, по которым ты хочешь получать оповещения
+	RedmineBaseURL  string // URL вашего Redmine
+	RedmineAPIKey   string // Ваш api-key для Redmine
+	GoogleDevApiKey string // Ваш api-key из Google Developer Account
+	TelegramToken   string // Токен для бота (BotFather)
+	ChatID          string // ID чата, где будет спамить бот (Get My ID)
 }
 
 func LoadConfig() (Config, error) {
@@ -22,18 +23,22 @@ func LoadConfig() (Config, error) {
 	}
 
 	cfg := Config{
-		RedmineBaseURL: os.Getenv("REDMINE_BASE_URL"),
-		RedmineAPIKey:  os.Getenv("REDMINE_API_KEY"),
-		TelegramToken:  os.Getenv("TELEGRAM_TOKEN"),
-		ChatID:         os.Getenv("CHAT_ID"),
-		ProjectsID:     env.GetSliceIntFromEnv("PROJECTS_LIST"),
+		ProjectsID:      env.GetSliceIntFromEnv("PROJECTS_LIST"),
+		RedmineBaseURL:  os.Getenv("REDMINE_BASE_URL"),
+		RedmineAPIKey:   os.Getenv("REDMINE_API_KEY"),
+		GoogleDevApiKey: os.Getenv("GOOGLE_DEV_API_KEY"),
+		TelegramToken:   os.Getenv("TELEGRAM_TOKEN"),
+		ChatID:          os.Getenv("CHAT_ID"),
 	}
 
 	return cfg, nil
 }
 
 func (c *Config) CheckAfterInit() error {
-	if c.RedmineBaseURL == "" || c.RedmineAPIKey == "" || c.TelegramToken == "" || c.ChatID == "" || c.ProjectsID == nil {
+	if c.RedmineBaseURL == "" || c.RedmineAPIKey == "" ||
+		c.TelegramToken == "" || c.ChatID == "" ||
+		len(c.ProjectsID) == 0 || c.GoogleDevApiKey == "" {
+
 		return fmt.Errorf(".env don't have requried value, check .env file")
 	}
 

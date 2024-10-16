@@ -10,58 +10,61 @@ import (
 )
 
 type Client struct {
-	RedmineBaseURL string
-	RedmineAPIKey  string
-	ProjectsID     []int
+	RedmineBaseURL  string
+	RedmineAPIKey   string
+	ProjectsID      []int
+	GoogleDevApiKey string
 }
 
-func NewClient(url string, key string, projectsID []int) *Client {
+func NewClient(url string, key string, projectsID []int, googleDevApiKey string) *Client {
 	return &Client{
-		RedmineBaseURL: url,
-		RedmineAPIKey:  key,
-		ProjectsID:     projectsID,
+		RedmineBaseURL:  url,
+		RedmineAPIKey:   key,
+		ProjectsID:      projectsID,
+		GoogleDevApiKey: googleDevApiKey,
 	}
 }
 
-func (c *Client) GetIssuesList() (IssuesList, error) {
+func (c *Client) GetIssuesList() (*IssuesList, error) {
 	var issuesList IssuesList
 
 	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/issues.json?key=", c.RedmineAPIKey, getProjectsFilter(c.ProjectsID), "&limit=100")
 	if err != nil {
-		return issuesList, fmt.Errorf("error concat strings for get issues request %s", err)
+		return nil, fmt.Errorf("error concat strings for get issues request %s", err)
 	}
 
 	body, err := httpreq.GetReqBody(url)
 	if err != nil {
-		return issuesList, fmt.Errorf("error get issues req %s", err)
+		return nil, fmt.Errorf("error get issues req %s", err)
 	}
 
 	err = json.Unmarshal(body, &issuesList)
 	if err != nil {
-		return issuesList, fmt.Errorf("error encoding body from get issues req %s", err)
+		return nil, fmt.Errorf("error encoding body from get issues req %s", err)
 	}
-	return issuesList, nil
+
+	return &issuesList, nil
 }
 
-func (c *Client) GetIssueInfo(issueID int) (IssueInfo, error) {
+func (c *Client) GetIssueInfo(issueID int) (*IssueInfo, error) {
 	var issueInfo IssueInfo
 
 	url, err := utils.ConcatStrings(c.RedmineBaseURL, "/issues/", fmt.Sprintf("%v.json", issueID), "?include=journals&key=", c.RedmineAPIKey, "&limit=100")
 	if err != nil {
-		return issueInfo, err
+		return nil, err
 	}
 
 	body, err := httpreq.GetReqBody(url)
 	if err != nil {
-		return issueInfo, fmt.Errorf("error get issue info req %s", err)
+		return nil, fmt.Errorf("error get issue info req %s", err)
 	}
 
 	err = json.Unmarshal(body, &issueInfo)
 	if err != nil {
-		return issueInfo, fmt.Errorf("error encoding body from get issue info req %s", err)
+		return nil, fmt.Errorf("error encoding body from get issue info req %s", err)
 	}
 
-	return issueInfo, nil
+	return &issueInfo, nil
 }
 
 func (c *Client) GetProjectsList() error {

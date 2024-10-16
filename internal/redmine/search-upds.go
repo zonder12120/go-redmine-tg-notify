@@ -9,7 +9,17 @@ import (
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
-func MakeMapIssuesList(i IssuesList) map[int]Issue {
+func InitIgnoredIssuesMap(issuesArr []int) map[int]struct{} {
+	ignoredIssuesMap := make(map[int]struct{}, len(issuesArr))
+
+	for _, issueId := range issuesArr {
+		ignoredIssuesMap[issueId] = struct{}{}
+	}
+
+	return ignoredIssuesMap
+}
+
+func MakeMapIssuesList(i *IssuesList) map[int]Issue {
 	m := make(map[int]Issue, len(i.Issues))
 	for _, issue := range i.Issues {
 		m[issue.ID] = issue
@@ -34,15 +44,21 @@ func (c *Client) AddJournalsIssuesMap(issueMap map[int]Issue) error {
 	return nil
 }
 
-func (c *Client) NotifyUpdates(oldIssueMap, newIssueMap map[int]Issue) {
+func (c *Client) NotifyUpdates(oldIssueMap, newIssueMap map[int]Issue, ignoredIssuesMap map[int]struct{}) {
 
 	// Сравниваем старые задачи с новыми
 	for newIssueID, newIssue := range newIssueMap {
 
+		_, exists := ignoredIssuesMap[newIssueID]
+
+		if exists {
+			continue
+		}
+
 		oldIssue, exists := oldIssueMap[newIssueID]
 
 		// Если есть новая задача, сразу создаём оповещение
-		if !exists {
+		if !exists && IsWorkTime(c.GoogleDevApiKey) {
 			err := notify.NotifyNewTask(newIssueID, newIssue.Priority.ID, newIssue.Title, newIssue.AssignedTo.Name)
 			utils.LogErr(fmt.Sprintf("Error notify new task number %v", newIssueID), err)
 
@@ -52,7 +68,7 @@ func (c *Client) NotifyUpdates(oldIssueMap, newIssueMap map[int]Issue) {
 		msg, err := createDiffMessage(oldIssue, newIssue)
 		utils.LogErr(fmt.Sprintf("Error create msg for task number %v", newIssueID), err)
 
-		if msg != "" {
+		if msg != "" && IsWorkTime(c.GoogleDevApiKey) {
 			err := notify.Notify(msg)
 			if err != nil {
 				log.Println("Error send message to chat: ", err)
