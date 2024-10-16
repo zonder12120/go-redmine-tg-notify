@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	httpreq "github.com/zonder12120/go-redmine-tg-notify/internal/httpreq"
+	httpreq "github.com/zonder12120/go-redmine-tg-notify/pkg/httpreq"
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 

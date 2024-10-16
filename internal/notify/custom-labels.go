@@ -1,5 +1,29 @@
 package notify
 
+func markPriority(priorityID int) string {
+	switch priorityID {
+	case 5:
+		return "\U00002B24 " // Эмодзи: 🔶
+	case 4:
+		return "\U0001F534 " // Эмодзи: 🔴
+	case 3:
+		return "\U0001F7E1 " // Эмодзи: 🟡
+	case 2:
+		return "\U0001F7E2 " // Эмодзи: 🟢
+	default:
+		return "?"
+	}
+}
+
+func markTracker(trackerID int) string {
+	switch trackerID {
+	case 4:
+		return "\U0001F4B0 " // Эмодзи: 💰
+	default:
+		return ""
+	}
+}
+
 func oldPriorString(priorityID int) string {
 	switch priorityID {
 	case 5:
@@ -27,29 +51,5 @@ func newPriorString(priorityID int) string {
 		return "Третий"
 	default:
 		return "?"
-	}
-}
-
-func markPriority(priorityID int) string {
-	switch priorityID {
-	case 5:
-		return "\U00002B24 " // Эмодзи: 🔶
-	case 4:
-		return "\U0001F534 " // Эмодзи: 🔴
-	case 3:
-		return "\U0001F7E1 " // Эмодзи: 🟡
-	case 2:
-		return "\U0001F7E2 " // Эмодзи: 🟢
-	default:
-		return "?"
-	}
-}
-
-func markTracker(trackerID int) string {
-	switch trackerID {
-	case 4:
-		return "\U0001F4B0 " // Эмодзи: 💰
-	default:
-		return ""
 	}
 }

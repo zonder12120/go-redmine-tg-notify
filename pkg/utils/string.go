@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Функция сложения строк (оптимизация стандартной конкатенации)
 func ConcatStrings(s ...string) (string, error) {
 	var builder strings.Builder
 
@@ -17,8 +18,6 @@ func ConcatStrings(s ...string) (string, error) {
 	}
 
 	str := builder.String()
-
-	builder.Reset()
 
 	return str, nil
 }

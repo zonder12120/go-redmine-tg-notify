@@ -89,5 +89,3 @@ func CreateMsg(issueID int, priorityID int, trackerID int, title string, text st
 
 	return str, nil
 }
-
-// Добавляем экранирование для спец символов MarkdownV2, чтобы telegram смог распарсить текст

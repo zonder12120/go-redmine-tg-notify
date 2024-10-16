@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	httpreq "github.com/zonder12120/go-redmine-tg-notify/internal/httpreq"
+	httpreq "github.com/zonder12120/go-redmine-tg-notify/pkg/httpreq"
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
@@ -31,7 +31,7 @@ func (c *Client) GetIssuesList() (IssuesList, error) {
 		return issuesList, fmt.Errorf("error concat strings for get issues request %s", err)
 	}
 
-	body, err := httpreq.GetRespBody(url)
+	body, err := httpreq.GetReqBody(url)
 	if err != nil {
 		return issuesList, fmt.Errorf("error get issues req %s", err)
 	}
@@ -51,7 +51,7 @@ func (c *Client) GetIssueInfo(issueID int) (IssueInfo, error) {
 		return issueInfo, err
 	}
 
-	body, err := httpreq.GetRespBody(url)
+	body, err := httpreq.GetReqBody(url)
 	if err != nil {
 		return issueInfo, fmt.Errorf("error get issue info req %s", err)
 	}
@@ -72,7 +72,7 @@ func (c *Client) GetProjectsList() error {
 		return fmt.Errorf("еrror get project list req: %s", err)
 	}
 
-	body, err := httpreq.GetRespBody(url)
+	body, err := httpreq.GetReqBody(url)
 	if err != nil {
 		return err
 	}
