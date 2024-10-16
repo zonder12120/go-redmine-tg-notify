@@ -1,4 +1,4 @@
-package checktime
+package timecheck
 
 type Holidays struct {
 	Items []Item `json:"items"`

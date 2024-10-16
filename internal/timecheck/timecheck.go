@@ -1,4 +1,4 @@
-package checktime
+package timecheck
 
 import (
 	"encoding/json"

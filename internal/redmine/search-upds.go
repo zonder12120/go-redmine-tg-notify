@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	checktime "github.com/zonder12120/go-redmine-tg-notify/internal/check-time"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/notify"
+	"github.com/zonder12120/go-redmine-tg-notify/internal/timecheck"
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
@@ -59,7 +59,7 @@ func (c *Client) NotifyUpdates(oldIssueMap, newIssueMap map[int]Issue, ignoredIs
 		oldIssue, exists := oldIssueMap[newIssueID]
 
 		// Если есть новая задача, сразу создаём оповещение
-		if !exists && checktime.IsWorkTime(c.GoogleDevApiKey) {
+		if !exists && timecheck.IsWorkTime(c.GoogleDevApiKey) {
 			err := notify.NotifyNewTask(newIssueID, newIssue.Priority.ID, newIssue.Title, newIssue.AssignedTo.Name)
 			utils.LogErr(fmt.Sprintf("Error notify new task number %v", newIssueID), err)
 
@@ -69,7 +69,7 @@ func (c *Client) NotifyUpdates(oldIssueMap, newIssueMap map[int]Issue, ignoredIs
 		msg, err := createDiffMessage(oldIssue, newIssue)
 		utils.LogErr(fmt.Sprintf("Error create msg for task number %v", newIssueID), err)
 
-		if msg != "" && checktime.IsWorkTime(c.GoogleDevApiKey) {
+		if msg != "" && timecheck.IsWorkTime(c.GoogleDevApiKey) {
 			err := notify.Notify(msg)
 			if err != nil {
 				log.Println("Error send message to chat: ", err)

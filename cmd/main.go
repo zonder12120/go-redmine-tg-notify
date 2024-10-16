@@ -5,10 +5,10 @@ import (
 	"log"
 	"time"
 
-	checktime "github.com/zonder12120/go-redmine-tg-notify/internal/check-time"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/config"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/notify"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/redmine"
+	"github.com/zonder12120/go-redmine-tg-notify/internal/timecheck"
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
@@ -48,7 +48,7 @@ func main() {
 
 	rmClient.AddJournalsIssuesMap(oldIssuesMap)
 
-	if checktime.IsWorkTime(cfg.GoogleDevApiKey) {
+	if timecheck.IsWorkTime(cfg.GoogleDevApiKey) {
 		notify.Notify("Бот запущен")
 		notify.Notify(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
 	}
