@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	checktime "github.com/zonder12120/go-redmine-tg-notify/internal/check-time"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/config"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/notify"
 	"github.com/zonder12120/go-redmine-tg-notify/internal/redmine"
@@ -47,7 +48,7 @@ func main() {
 
 	rmClient.AddJournalsIssuesMap(oldIssuesMap)
 
-	if redmine.IsWorkTime(cfg.GoogleDevApiKey) {
+	if checktime.IsWorkTime(cfg.GoogleDevApiKey) {
 		notify.Notify("Бот запущен")
 		notify.Notify(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
 	}

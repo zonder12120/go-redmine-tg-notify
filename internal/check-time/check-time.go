@@ -1,4 +1,4 @@
-package redmine
+package checktime
 
 import (
 	"encoding/json"
