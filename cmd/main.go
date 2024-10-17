@@ -49,8 +49,8 @@ func main() {
 	rmClient.AddJournalsIssuesMap(oldIssuesMap)
 
 	if timecheck.IsWorkTime(cfg.GoogleDevApiKey) {
-		notify.Notify("Бот запущен")
-		notify.Notify(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
+		notify.SendMessage("Бот запущен")
+		notify.SendMessage(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
 	}
 
 	log.Println("The bot is running")
@@ -69,7 +69,7 @@ func main() {
 
 		rmClient.AddJournalsIssuesMap(newIssuesMap)
 
-		rmClient.NotifyUpdates(oldIssuesMap, newIssuesMap, ignoredIssuesMap)
+		notify.Updates(oldIssuesMap, newIssuesMap, ignoredIssuesMap)
 
 		log.Printf("ITERATION IS OVER\n\n\n")
 
@@ -77,4 +77,5 @@ func main() {
 
 		time.Sleep(defaultTimeout)
 	}
+
 }

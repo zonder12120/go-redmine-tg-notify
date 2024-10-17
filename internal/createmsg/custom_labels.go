@@ -1,4 +1,4 @@
-package notify
+package createmsg
 
 func markPriority(priorityID int) string {
 	switch priorityID {

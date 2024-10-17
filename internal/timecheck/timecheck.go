@@ -38,8 +38,8 @@ func IsWorkTime(googleDevApiKey string) bool {
 	return false
 }
 
-func fetchHolidays(googleDevApiKey string) (*Holidays, error) {
-	var holidays Holidays
+func fetchHolidays(googleDevApiKey string) (*holidays, error) {
+	var holidays holidays
 
 	url, err := utils.ConcatStrings(
 		"https://clients6.google.com/calendar/v3/calendars/en.russian%23holiday@group.v.calendar.google.com",

@@ -1,13 +1,13 @@
 package timecheck
 
-type Holidays struct {
-	Items []Item `json:"items"`
+type holidays struct {
+	Items []item `json:"items"`
 }
 
-type Item struct {
-	Start Start `json:"start"`
+type item struct {
+	Start start `json:"start"`
 }
 
-type Start struct {
+type start struct {
 	Date string `json:"date"`
 }

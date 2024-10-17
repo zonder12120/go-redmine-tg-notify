@@ -1,4 +1,4 @@
-package notify
+package createmsg
 
 import (
 	"testing"
@@ -19,8 +19,6 @@ func TestAddStatusTxt(t *testing.T) {
 
 	for _, tstCase := range testTable {
 		result, err := AddStatusTxt(tstCase.oldStatusName, tstCase.newStatusName)
-
-		//t.Logf("Calling AddStatusTxt(%s, %s), result: %s", tstCase.oldStatusName, tstCase.newStatusName, result)
 
 		if err != nil {
 			t.Errorf("Should not produce an error %s", err)
@@ -57,8 +55,6 @@ func TestAddPriorityTxt(t *testing.T) {
 
 	for _, tstCase := range testTable {
 		result, err := AddPriorityTxt(tstCase.oldPriorityID, tstCase.newPriorityID)
-
-		//t.Logf("Calling AddStatusTxt(%d, %d), result: %s", tstCase.oldPriorityID, tstCase.newPriorityID, result)
 
 		if err != nil {
 			t.Errorf("Should not produce an error %s", err)
@@ -101,8 +97,6 @@ func TestAddAssignedTxt(t *testing.T) {
 	for _, tstCase := range testTable {
 		result, err := AddAssignedTxt(tstCase.oldAssignedToName, tstCase.newAssignedToName)
 
-		//t.Logf("Calling AddStatusTxt(%s, %s), result: %s", tstCase.oldAssignedToName, tstCase.newAssignedToName, result)
-
 		if err != nil {
 			t.Errorf("Should not produce an error %s", err)
 		}
@@ -131,8 +125,6 @@ func TestAddNewCommentTxt(t *testing.T) {
 	for _, tstCase := range testTable {
 		result, err := AddNewCommentTxt(tstCase.str)
 
-		//t.Logf("Calling AddStatusTxt(%s), result: %s", tstCase.str, result)
-
 		if err != nil {
 			t.Errorf("Should not produce an error %s", err)
 		}
@@ -160,7 +152,7 @@ func TestCreateMsg(t *testing.T) {
 			title:        "Тестовая задача",
 			text:         "\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*",
 			assignToName: "Тестов Тест",
-			expected:     "\U0001F4B0 \U0001F7E1 В задаче [0](/issues/0) \\- Тестовая задача\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*\\\nИсполнитель *Тестов Тест*",
+			expected:     "\U0001F4B0 \U0001F7E1 В задаче [0](https://redmine.example.com/issues/0) \\- Тестовая задача\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*\\\nИсполнитель *Тестов Тест*",
 		},
 		{
 			issueID:      0,
@@ -169,14 +161,12 @@ func TestCreateMsg(t *testing.T) {
 			title:        "*Тестовая_задача[]()~><#+-=|.!",
 			text:         "\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*",
 			assignToName: "Тестов Тест",
-			expected:     "\U0001F4B0 \U0001F7E1 В задаче [0](/issues/0) \\- \\*Тестовая\\_задача\\[\\]\\(\\)\\~\\>\\<\\#\\+\\-\\=\\|\\.\\!\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*\\\nИсполнитель *Тестов Тест*",
+			expected:     "\U0001F4B0 \U0001F7E1 В задаче [0](https://redmine.example.com/issues/0) \\- \\*Тестовая\\_задача\\[\\]\\(\\)\\~\\>\\<\\#\\+\\-\\=\\|\\.\\!\\\n\\-изменился приоритет c *Первого* на *Нулевой*\\\n\\-был добавлен комментарий: *\"Тест\"*\\\nИсполнитель *Тестов Тест*",
 		},
 	}
 
 	for _, tstCase := range testTable {
-		result, err := CreateMsg(tstCase.issueID, tstCase.priorityID, tstCase.trackerID, tstCase.title, tstCase.text, tstCase.assignToName)
-
-		//t.Logf("Calling AddStatusTxt(%d, %d, %d, %s, %s, %s), result: %s", tstCase.issueID, tstCase.priorityID, tstCase.trackerID, tstCase.title, tstCase.text, tstCase.assignToName, result)
+		result, err := NewMsg("https://redmine.example.com", tstCase.issueID, tstCase.priorityID, tstCase.trackerID, tstCase.title, tstCase.text, tstCase.assignToName)
 
 		if err != nil {
 			t.Errorf("Should not produce an error %s", err)
