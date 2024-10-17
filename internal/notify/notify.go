@@ -17,7 +17,7 @@ var cfg, _ = config.LoadConfig()
 
 var tgClient = telegram.NewClient(cfg.TelegramToken, cfg.ChatID)
 
-var offHoursIssues = []int{}
+var offHoursIssues = make(map[int]struct{})
 
 func SendMessage(msg string) error {
 	log.Println("Sending message (MarkdownV2): ", msg)
@@ -34,7 +34,7 @@ func Updates(oldIssueMap, newIssueMap map[int]redmine.Issue, ignoredIssuesMap ma
 		err = SendMessage(msg)
 		utils.LogErr("Error send message off hours changes: ", err)
 
-		offHoursIssues = []int{}
+		offHoursIssues = nil
 	}
 
 	// Сравниваем старые задачи с новыми
@@ -48,8 +48,12 @@ func Updates(oldIssueMap, newIssueMap map[int]redmine.Issue, ignoredIssuesMap ma
 
 		oldIssue, exists := oldIssueMap[newIssueID]
 
-		// Если есть новая задача, сразу создаём оповещение
-		if !exists && timecheck.IsWorkTime(cfg.GoogleDevApiKey) {
+		// Если есть новая задача, сразу создаём оповещение (в рабочее время)
+		if !exists {
+			if !timecheck.IsWorkTime(cfg.GoogleDevApiKey) {
+				offHoursIssues[newIssueID] = struct{}{}
+			}
+
 			msg, err := createmsg.NewTask(cfg.RedmineBaseURL, newIssueID, newIssue.Priority.ID, newIssue.Title, newIssue.AssignedTo.Name)
 			utils.LogErr(fmt.Sprintf("Error create message new task, number %v", newIssueID), err)
 
@@ -62,7 +66,7 @@ func Updates(oldIssueMap, newIssueMap map[int]redmine.Issue, ignoredIssuesMap ma
 		if exists && oldIssueMap[newIssueID].UpdateTime != newIssueMap[newIssueID].UpdateTime {
 
 			if !timecheck.IsWorkTime(cfg.GoogleDevApiKey) {
-				offHoursIssues = append(offHoursIssues, newIssueID)
+				offHoursIssues[newIssueID] = struct{}{}
 
 				continue
 			}

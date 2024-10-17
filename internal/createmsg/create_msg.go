@@ -10,10 +10,13 @@ import (
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
-func OffHoursChanges(redmineBaseURL string, issuesIDSlc []int) (string, error) {
+func OffHoursChanges(redmineBaseURL string, issuesIDSlc map[int]struct{}) (string, error) {
 	var sb strings.Builder
 
-	for index, issueID := range issuesIDSlc {
+	index := 0
+
+	for issueID := range issuesIDSlc {
+
 		markdownString, err := utils.ConcatStrings(
 			"[", strconv.Itoa(issueID), "]",
 			"(", redmineBaseURL, "/issues/", strconv.Itoa(issueID), ")",
@@ -27,6 +30,8 @@ func OffHoursChanges(redmineBaseURL string, issuesIDSlc []int) (string, error) {
 		if index != len(issuesIDSlc) {
 			sb.WriteString(", ")
 		}
+
+		index++
 	}
 
 	issuesStr := sb.String()
