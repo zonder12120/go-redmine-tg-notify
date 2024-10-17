@@ -28,7 +28,7 @@ CHAT_ID=your_chat_id
 REDMINE_API_KEY=your_redmine_api_key
 BASE_URL=https://redmine.your-company.com
 PROJECTS_LIST=1,2,3
-GOOGLE_DEV_API_KEY=AIzaSyBcOT_DpEQysiwFmmmZXupKpnrOdJYAhhM
+GOOGLE_DEV_API_KEY=your_google_dev_api_key
 ```
 
 ## Functionality
