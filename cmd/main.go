@@ -12,7 +12,8 @@ import (
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
-const defaultTimeout = 6 * time.Second
+// Дефолтный таймаут запроса обновлений
+const defaultTimeout = 60 * time.Second
 
 func main() {
 
