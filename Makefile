@@ -16,7 +16,11 @@ stop:
 
 restart: stop run
 
-update: stop build run
+git-pull:
+	@echo "Pulling the latest changes from Git..."
+	git pull
+
+update: git-pull stop build run
 
 logs:
 	docker logs -f $(CONTAINER_NAME)
