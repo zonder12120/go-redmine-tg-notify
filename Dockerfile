@@ -24,6 +24,10 @@ USER root
 
 RUN apk add --no-cache tzdata
 
+ENV TZ=Europe/Moscow
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup  
 
 WORKDIR /app
