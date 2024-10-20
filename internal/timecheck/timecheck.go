@@ -31,7 +31,7 @@ func IsWorkTime(googleDevApiKey string) bool {
 		}
 	}
 
-	if currentTime.Hour() >= 9 && currentTime.Hour() < 19 {
+	if (currentTime.Weekday() >= time.Monday && currentTime.Weekday() <= time.Friday) && (currentTime.Hour() >= 9 && currentTime.Hour() < 19) {
 		return true
 	}
 
