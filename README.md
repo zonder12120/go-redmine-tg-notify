@@ -17,18 +17,20 @@ Create a `.env` file in the root directory of the project with the following env
 - `CHAT_ID`: The chat ID where the bot will send notifications.
 - `PROJECTS_LIST`: Here is a list of project IDs for which you want to receive notifications. You can get the list of project IDs and their names using the GetProjectsList() method in the redmine package. This method is called by default in main and logs the list of projects to the console.
 - `GOOGLE_DEV_API_KEY`: Create an API app in the [google developer account](https://console.developers.google.com/), from the "Credentials" tab you can create an API key, you get something like this AIzaSyBcOT_DpEQysiwFmmmZXupKpnrOdJYAhhM
+- `TIME_ZONE`: Here you need to specify the name of the time zone, you can get the name on this site: [nodatime.org](https://nodatime.org/TimeZones)
 
 **ATTENTION, CUSTOM RUSSIAN HOLIDAY CALENDAR IN USE!** <br>
 If you are not from Russia, you can find an API for your country's calendar. I don't think there would be any difficulties with that.
 
 Example `.env` file:
 ```dotenv
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-CHAT_ID=your_chat_id
-REDMINE_API_KEY=your_redmine_api_key
-BASE_URL=https://redmine.your-company.com
-PROJECTS_LIST=1,2,3
-GOOGLE_DEV_API_KEY=your_google_dev_api_key
+TELEGRAM_BOT_TOKEN="your_telegram_bot_token"
+CHAT_ID="your_chat_id"
+REDMINE_API_KEY="your_redmine_api_key"
+BASE_URL="https://redmine.your-company.com"
+PROJECTS_LIST="1,2,3"
+GOOGLE_DEV_API_KEY="your_google_dev_api_key"
+TIME_ZONE="Europe/Moscow"
 ```
 
 ## Functionality

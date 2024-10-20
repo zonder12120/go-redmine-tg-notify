@@ -11,9 +11,9 @@ import (
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
 )
 
-func IsWorkTime(googleDevApiKey string) bool {
+func IsWorkTime(googleDevApiKey, timeZone string) bool {
 	// Инициализируем часовой пояс (у меня были с этим проблемы на Orange Pi)
-	location, err := time.LoadLocation("Europe/Moscow")
+	location, err := time.LoadLocation(timeZone)
 	if err != nil {
 		log.Fatalf("Ошибка загрузки часового поясв: %v", err)
 	}

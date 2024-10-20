@@ -14,6 +14,7 @@ type Config struct {
 	GoogleDevApiKey string // Ваш api-key из Google Developer Account
 	TelegramToken   string // Токен для бота (BotFather)
 	ChatID          string // ID чата, где будет спамить бот (Get My ID)
+	TimeZone        string // Часовой пояс, чтобы не испытывать проблем с определением времени на сервере
 }
 
 func LoadConfig() (Config, error) {
@@ -29,15 +30,17 @@ func LoadConfig() (Config, error) {
 		GoogleDevApiKey: os.Getenv("GOOGLE_DEV_API_KEY"),
 		TelegramToken:   os.Getenv("TELEGRAM_TOKEN"),
 		ChatID:          os.Getenv("CHAT_ID"),
+		TimeZone:        os.Getenv("TIME_ZONE"),
 	}
 
 	return cfg, nil
 }
 
 func (c *Config) CheckAfterInit() error {
-	if c.RedmineBaseURL == "" || c.RedmineAPIKey == "" ||
-		c.TelegramToken == "" || c.ChatID == "" ||
-		len(c.ProjectsID) == 0 || c.GoogleDevApiKey == "" {
+	if len(c.ProjectsID) == 0 || c.RedmineBaseURL == "" ||
+		c.RedmineAPIKey == "" || c.TelegramToken == "" ||
+		c.ChatID == "" || c.GoogleDevApiKey == "" ||
+		c.TimeZone == "" {
 
 		return fmt.Errorf(".env don't have requried value, check .env file")
 	}

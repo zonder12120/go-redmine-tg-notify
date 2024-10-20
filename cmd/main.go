@@ -49,7 +49,7 @@ func main() {
 
 	rmClient.AddJournalsIssuesMap(oldIssuesMap)
 
-	if timecheck.IsWorkTime(cfg.GoogleDevApiKey) {
+	if timecheck.IsWorkTime(cfg.GoogleDevApiKey, cfg.TimeZone) {
 		notify.SendMessage("Бот запущен")
 		notify.SendMessage(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
 	}
