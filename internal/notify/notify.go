@@ -52,6 +52,7 @@ func Updates(oldIssueMap, newIssueMap map[int]redmine.Issue, ignoredIssuesMap ma
 		if !exists {
 			if !timecheck.IsWorkTime(cfg.GoogleDevApiKey) {
 				offHoursIssues[newIssueID] = struct{}{}
+				log.Println("Added off hours issue ", newIssueID)
 			}
 
 			msg, err := createmsg.NewTask(cfg.RedmineBaseURL, newIssueID, newIssue.Priority.ID, newIssue.Title, newIssue.AssignedTo.Name)
@@ -67,6 +68,7 @@ func Updates(oldIssueMap, newIssueMap map[int]redmine.Issue, ignoredIssuesMap ma
 
 			if !timecheck.IsWorkTime(cfg.GoogleDevApiKey) {
 				offHoursIssues[newIssueID] = struct{}{}
+				log.Println("Added off hours issue ", newIssueID)
 
 				continue
 			}
