@@ -18,6 +18,12 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o tg-bot ./cmd
 
 FROM alpine:latest
 
+USER root
+
+ENV TZ=Europe/Moscow
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup  
 
 WORKDIR /app
