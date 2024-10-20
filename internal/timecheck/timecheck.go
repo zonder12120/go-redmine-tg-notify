@@ -12,13 +12,7 @@ import (
 )
 
 func IsWorkTime(googleDevApiKey string) bool {
-	// Инициализируем часовой пояс (у меня были с этим проблемы на Orange Pi)
-	location, err := time.LoadLocation("Europe/Moscow")
-	if err != nil {
-		log.Fatalf("Ошибка загрузки часового поясв: %v", err)
-	}
-
-	currentTime := time.Now().In(location)
+	currentTime := time.Now()
 
 	holidays, err := fetchHolidays(googleDevApiKey)
 	if err != nil {

@@ -10,6 +10,8 @@ RUN go mod download
 
 COPY . .
 
+RUN test -f /app/cmd/.env || (echo ".env file not found in /app/cmd" && exit 1)
+
 RUN go test ./...
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7  go build -o tg-bot ./cmd
@@ -21,10 +23,6 @@ FROM alpine:latest
 USER root
 
 RUN apk add --no-cache tzdata
-
-ENV TZ=Europe/Moscow
-
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup  
 
