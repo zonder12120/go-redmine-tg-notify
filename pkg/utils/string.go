@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 )
 
@@ -24,11 +23,21 @@ func ConcatStrings(s ...string) (string, error) {
 
 // Добавляем экранирование для спец символов MarkdownV2, чтобы Telegram смог распарсить текст
 func MarkDownFilter(text string) string {
-	markdownSpecialChars := regexp.MustCompile(`([\_\*\[\]\(\)~` + "`" + `>#+\-=|{}.!])`)
+	text = strings.ReplaceAll(text, "*", "\\*")
+	text = strings.ReplaceAll(text, "_", "\\_")
+	text = strings.ReplaceAll(text, "[", "\\[")
+	text = strings.ReplaceAll(text, "]", "\\]")
+	text = strings.ReplaceAll(text, "(", "\\(")
+	text = strings.ReplaceAll(text, ")", "\\)")
+	text = strings.ReplaceAll(text, "~", "\\~")
+	text = strings.ReplaceAll(text, ">", "\\>")
+	text = strings.ReplaceAll(text, "#", "\\#")
+	text = strings.ReplaceAll(text, "+", "\\+")
+	text = strings.ReplaceAll(text, "-", "\\-")
+	text = strings.ReplaceAll(text, "=", "\\=")
+	text = strings.ReplaceAll(text, "|", "\\|")
+	text = strings.ReplaceAll(text, ".", "\\.")
+	text = strings.ReplaceAll(text, "!", "\\!")
 
-	replaceFn := func(char string) string {
-		return `\` + char
-	}
-
-	return markdownSpecialChars.ReplaceAllStringFunc(text, replaceFn)
+	return text
 }
