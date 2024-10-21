@@ -2,7 +2,7 @@ package telegram
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 
 	httpreq "github.com/zonder12120/go-redmine-tg-notify/pkg/httpreq"
 	"github.com/zonder12120/go-redmine-tg-notify/pkg/utils"
@@ -23,19 +23,35 @@ func NewClient(tkn string, id string) *Client {
 }
 
 func (c *Client) SendMsg(txt string) error {
-	jsonData, err := json.Marshal(newMessage(c.ChatID, txt))
+	jsonDataReq, err := json.Marshal(newMessage(c.ChatID, txt))
 	if err != nil {
-		return fmt.Errorf("error marshalling data for send message req: %s", err)
+		return err
 	}
 
 	url, err := utils.ConcatStrings(TG_BASE_URL, c.TelegramToken, "/sendMessage")
 	if err != nil {
-		return fmt.Errorf("error concat string for send message req: %s", err)
+		return err
 	}
 
-	err = httpreq.PostReq(url, jsonData)
+	body, err := httpreq.PostReqBody(url, jsonDataReq)
 	if err != nil {
-		return fmt.Errorf("error send message req %s", err)
+		log.Println(err)
 	}
+
+	var jsonDataResp response
+
+	if len(body) != 0 {
+		err = json.Unmarshal(body, &jsonDataResp)
+		if err != nil {
+			return err
+		}
+
+		if !jsonDataResp.Ok {
+			log.Println("Error response description: ", jsonDataResp.Description)
+		}
+	} else {
+		log.Println("Emty body by sendMessage")
+	}
+
 	return nil
 }

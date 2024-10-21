@@ -13,3 +13,9 @@ func newMessage(chatID, txt string) *message {
 		Parse_mode: "MarkdownV2",
 	}
 }
+
+type response struct {
+	Ok          bool   `json:"ok"`
+	ErrorCode   int    `json:"error_code,omitempty"`
+	Description string `json:"description,omitempty"`
+}

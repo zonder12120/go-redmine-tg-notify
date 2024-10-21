@@ -24,13 +24,13 @@ func GetReqBody(url string) ([]byte, error) {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("response by server non-OK: %v", resp.StatusCode)
-	}
-
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error read response body from GET request: %s", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return body, fmt.Errorf("response by server non-OK: %v", resp.StatusCode)
 	}
 
 	return body, nil
@@ -61,13 +61,13 @@ func PostReqBody(url string, jsonData []byte) ([]byte, error) {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("response by server non-OK: %v", resp.StatusCode)
-	}
-
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error read response body from GET request: %s", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return body, fmt.Errorf("response by server non-OK: %v", resp.StatusCode)
 	}
 
 	return body, nil
