@@ -104,10 +104,12 @@ func AddAssignedTxt(oldAssignedToName, newAssignedToName string) (string, error)
 	return str, nil
 }
 
-func AddNewCommentTxt(str string) (string, error) {
+func AddNewCommentTxt(comment string) (string, error) {
+	comment = utils.MarkDownFilter(comment)
+
 	str, err := utils.ConcatStrings(
 		"\\\n\\-был добавлен комментарий: ",
-		"*\\\"", str, "\\\"*",
+		"*\\\"", comment, "\\\"*",
 	)
 	if err != nil {
 		return "", err
