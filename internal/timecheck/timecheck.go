@@ -23,11 +23,11 @@ func IsWorkTime(timeZone string) bool {
 	if currentTime.Hour() >= 9 && currentTime.Hour() < 19 {
 		year := currentTime.Year()
 
-		month := currentTime.Month()
+		month := int(currentTime.Month())
 
 		day := currentTime.Day()
 
-		flag, err := checkDayOff(year, int(month), day)
+		flag, err := checkDayOff(year, month, day)
 		utils.FatalOnError(err)
 
 		switch flag {
