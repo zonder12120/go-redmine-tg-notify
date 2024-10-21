@@ -13,7 +13,7 @@ import (
 )
 
 // Дефолтный таймаут запроса обновлений
-const defaultTimeout = 6 * time.Second
+const defaultTimeout = 60 * time.Second
 
 func main() {
 
