@@ -54,7 +54,7 @@ make run
 - `run`: Run image.
 - `stop`: Stop the container.
 - `restart`: Stop, then run the container.
-- `losg`: Show container logs.
+- `logs`: Show container logs.
 - `clean`: Delete image.
 
 ## Functionality
