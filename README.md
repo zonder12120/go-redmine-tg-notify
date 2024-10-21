@@ -6,6 +6,7 @@ For any inquiries or suggestions, reach out via Telegram: [@danek_kulikov](https
 
 ## Table of Contents
 - [Configuration](#configuration)
+- [Start app](#start-app)
 - [Functionality](#functionality)
 
 
@@ -31,10 +32,30 @@ PROJECTS_LIST="1,2,3"
 TIME_ZONE="Europe/Moscow"
 ```
 
+## Start app
+
+Clone repository on ur server.
+
+Edit Dockerfile, on the go build line, because the OS and architecture may differ from mine. 
+
+Create .env in ./cmd, as in the example described above, then run next commands from the root of the directory:
+
+```bash
+make build
+```
+
+```bash
+make run
+```
+
 ## Makefile
 
-- `REDMINE_API_KEY`: Your API key for Redmine.
-- `TELEGRAM_BOT_TOKEN`: The token for your Telegram bot.
+- `build`: Build image.
+- `run`: Run image.
+- `stop`: Stop the container.
+- `restart`: Stop, then run the container.
+- `losg`: Show container logs.
+- `clean`: Delete image.
 
 ## Functionality
 
