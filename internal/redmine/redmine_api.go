@@ -16,12 +16,11 @@ type Client struct {
 	GoogleDevApiKey string
 }
 
-func NewClient(url string, key string, projectsID []int, googleDevApiKey string) *Client {
+func NewClient(url string, key string, projectsID []int) *Client {
 	return &Client{
-		RedmineBaseURL:  url,
-		RedmineAPIKey:   key,
-		ProjectsID:      projectsID,
-		GoogleDevApiKey: googleDevApiKey,
+		RedmineBaseURL: url,
+		RedmineAPIKey:  key,
+		ProjectsID:     projectsID,
 	}
 }
 

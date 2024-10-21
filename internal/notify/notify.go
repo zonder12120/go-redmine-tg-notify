@@ -27,7 +27,7 @@ func SendMessage(msg string) error {
 func Updates(oldIssueMap, newIssueMap map[int]redmine.Issue, ignoredIssuesMap map[int]struct{}) {
 
 	// Отправляем номера задач, по которым были изменения во внерабочее время
-	if len(offHoursIssues) != 0 && timecheck.IsWorkTime(cfg.GoogleDevApiKey, cfg.TimeZone) {
+	if len(offHoursIssues) != 0 && timecheck.IsWorkTime(cfg.TimeZone) {
 		msg, err := createmsg.OffHoursChanges(cfg.RedmineBaseURL, offHoursIssues)
 		utils.LogErr("Error create message off hours changes: ", err)
 
@@ -50,7 +50,7 @@ func Updates(oldIssueMap, newIssueMap map[int]redmine.Issue, ignoredIssuesMap ma
 
 		// Если есть новая задача, сразу создаём оповещение (в рабочее время)
 		if !exists {
-			if !timecheck.IsWorkTime(cfg.GoogleDevApiKey, cfg.TimeZone) {
+			if !timecheck.IsWorkTime(cfg.TimeZone) {
 				offHoursIssues[newIssueID] = struct{}{}
 				log.Println("Added off hours issue ", newIssueID)
 			} else {
@@ -66,7 +66,7 @@ func Updates(oldIssueMap, newIssueMap map[int]redmine.Issue, ignoredIssuesMap ma
 
 		if exists && oldIssueMap[newIssueID].UpdateTime != newIssueMap[newIssueID].UpdateTime {
 
-			if !timecheck.IsWorkTime(cfg.GoogleDevApiKey, cfg.TimeZone) {
+			if !timecheck.IsWorkTime(cfg.TimeZone) {
 				offHoursIssues[newIssueID] = struct{}{}
 				log.Println("Added off hours issue ", newIssueID)
 

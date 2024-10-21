@@ -27,7 +27,7 @@ func OffHoursChanges(redmineBaseURL string, issuesIDSlc map[int]struct{}) (strin
 
 		sb.WriteString(markdownString)
 
-		if index != len(issuesIDSlc) {
+		if index != len(issuesIDSlc)-1 {
 			sb.WriteString(", ")
 		}
 

@@ -16,7 +16,6 @@ Create a `.env` file in the root directory of the project with the following env
 - `TELEGRAM_BOT_TOKEN`: The token for your Telegram bot.
 - `CHAT_ID`: The chat ID where the bot will send notifications.
 - `PROJECTS_LIST`: Here is a list of project IDs for which you want to receive notifications. You can get the list of project IDs and their names using the GetProjectsList() method in the redmine package. This method is called by default in main and logs the list of projects to the console.
-- `GOOGLE_DEV_API_KEY`: Create an API app in the [google developer account](https://console.developers.google.com/), from the "Credentials" tab you can create an API key, you get something like this AIzaSyBcOT_DpEQysiwFmmmZXupKpnrOdJYAhhM
 - `TIME_ZONE`: Here you need to specify the name of the time zone, you can get the name on this site: [nodatime.org](https://nodatime.org/TimeZones)
 
 **ATTENTION, CUSTOM RUSSIAN HOLIDAY CALENDAR IN USE!** <br>
@@ -29,9 +28,13 @@ CHAT_ID="your_chat_id"
 REDMINE_API_KEY="your_redmine_api_key"
 BASE_URL="https://redmine.your-company.com"
 PROJECTS_LIST="1,2,3"
-GOOGLE_DEV_API_KEY="your_google_dev_api_key"
 TIME_ZONE="Europe/Moscow"
 ```
+
+## Makefile
+
+- `REDMINE_API_KEY`: Your API key for Redmine.
+- `TELEGRAM_BOT_TOKEN`: The token for your Telegram bot.
 
 ## Functionality
 
@@ -53,8 +56,8 @@ Generates a notification message that will be sent to a Telegram chat:
 
 
 ### Time Management
-- **Work Time Check:** Verifies if the current time falls within working hours.
-- **Holidays:** Integrates with Google Calendar to check for holidays.
+- **Work Time Check:** Check if the time is within work hours, including holidays.
+- **Off hours changes:** Collects the numbers of tasks that had changes during off-hours.
 
 Feel free to contribute, fork, or suggest improvements. Your feedback is valuable in making this bot more efficient and user-friendly. For further assistance or to report issues, please contact via Telegram: [@danek_kulikov](https://t.me/danek_kulikov)
 
