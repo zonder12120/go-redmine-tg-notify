@@ -34,7 +34,7 @@ func main() {
 	err = cfg.CheckAfterInit()
 	utils.FatalOnError(err)
 
-	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey, cfg.ProjectsID, cfg.GoogleDevApiKey)
+	rmClient := redmine.NewClient(cfg.RedmineBaseURL, cfg.RedmineAPIKey, cfg.ProjectsID)
 
 	// Вывод в консоль всех имеющихся проектов, их id и соответствующего имени для конфига
 	// Начинается вывод списка с оглавления "Projects List:"
@@ -49,7 +49,7 @@ func main() {
 
 	rmClient.AddJournalsIssuesMap(oldIssuesMap)
 
-	if timecheck.IsWorkTime(cfg.GoogleDevApiKey, cfg.TimeZone) {
+	if timecheck.IsWorkTime(cfg.TimeZone) {
 		notify.SendMessage("Бот запущен")
 		notify.SendMessage(fmt.Sprintf("Бот работает каждые %v", defaultTimeout))
 	}
