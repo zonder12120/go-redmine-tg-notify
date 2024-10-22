@@ -23,21 +23,13 @@ func ConcatStrings(s ...string) (string, error) {
 
 // Добавляем экранирование для спец символов MarkdownV2, чтобы Telegram смог распарсить текст
 func MarkDownFilter(text string) string {
-	text = strings.ReplaceAll(text, "*", "\\*")
-	text = strings.ReplaceAll(text, "_", "\\_")
-	text = strings.ReplaceAll(text, "[", "\\[")
-	text = strings.ReplaceAll(text, "]", "\\]")
-	text = strings.ReplaceAll(text, "(", "\\(")
-	text = strings.ReplaceAll(text, ")", "\\)")
-	text = strings.ReplaceAll(text, "~", "\\~")
-	text = strings.ReplaceAll(text, ">", "\\>")
-	text = strings.ReplaceAll(text, "#", "\\#")
-	text = strings.ReplaceAll(text, "+", "\\+")
-	text = strings.ReplaceAll(text, "-", "\\-")
-	text = strings.ReplaceAll(text, "=", "\\=")
-	text = strings.ReplaceAll(text, "|", "\\|")
-	text = strings.ReplaceAll(text, ".", "\\.")
-	text = strings.ReplaceAll(text, "!", "\\!")
+	specSymbols := []string{
+		"*", "_", "[", "]", "(", ")", "~", ">", "#", "+", "-", "=", "|", ".", "!",
+	}
+
+	for _, symbol := range specSymbols {
+		text = strings.ReplaceAll(text, symbol, fmt.Sprintf("\\%s", symbol))
+	}
 
 	return text
 }
