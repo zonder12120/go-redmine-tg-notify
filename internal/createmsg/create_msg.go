@@ -44,6 +44,8 @@ func OffHoursChanges(redmineBaseURL string, issuesIDSlc map[int]struct{}) (strin
 }
 
 func NewTask(redmineBaseURL string, issueID int, priorityID int, title string, assignToName string) (string, error) {
+	title = utils.MarkDownFilter(title)
+
 	msg, err := utils.ConcatStrings(
 		markPriority(priorityID),
 		" Добавлена новая задача ",
