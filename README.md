@@ -14,7 +14,7 @@ For any inquiries or suggestions, reach out via Telegram: [@danek_kulikov](https
 Create a `.env` file in the root directory of the project with the following environment variables:
 - `REDMINE_BASE_URL`: Base URL for your Redmine instance like https://redmine.your-company.com
 - `REDMINE_API_KEY`: Your API key for Redmine.
-- `TELEGRAM_BOT_TOKEN`: The token for your Telegram bot.
+- `TELEGRAM_TOKEN`: The token for your Telegram bot.
 - `CHAT_ID`: The chat ID where the bot will send notifications.
 - `PROJECTS_LIST`: Here is a list of project IDs for which you want to receive notifications. You can get the list of project IDs and their names using the GetProjectsList() method in the redmine package. This method is called by default in main and logs the list of projects to the console.
 - `TIME_ZONE`: Here you need to specify the name of the time zone, you can get the name on this site: [nodatime.org](https://nodatime.org/TimeZones)
@@ -24,10 +24,10 @@ If you are not from Russia, you can find an API for your country's calendar. I d
 
 Example `.env` file:
 ```dotenv
-TELEGRAM_BOT_TOKEN="your_telegram_bot_token"
+TELEGRAM_TOKEN="your_telegram_bot_token"
 CHAT_ID="your_chat_id"
 REDMINE_API_KEY="your_redmine_api_key"
-BASE_URL="https://redmine.your-company.com"
+REDMINE_BASE_URL="https://redmine.your-company.com"
 PROJECTS_LIST="1,2,3"
 TIME_ZONE="Europe/Moscow"
 ```
