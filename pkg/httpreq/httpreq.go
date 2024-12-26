@@ -5,6 +5,7 @@ package httpreq
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,25 +16,50 @@ var client = &http.Client{
 	Timeout: 10 * time.Second,
 }
 
-// GET запрос, возвращающий тело
-func GetReqBody(url string) ([]byte, error) {
-	resp, err := client.Get(url)
+func doRequestBody(req *http.Request) ([]byte, error) {
+	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error sending GET request: %s", err)
+		return nil, fmt.Errorf("error sending request: %s", err)
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("response by server non-OK: %v", resp.StatusCode)
+		return nil, fmt.Errorf("server returned non-OK status: %v", resp.StatusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("error read response body from GET request: %s", err)
+		return nil, fmt.Errorf("error reading response body: %s", err)
 	}
 
 	return body, nil
+}
+
+// GET запрос, возвращающий тело
+func GetReqBody(url string) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating GET request: %s", err)
+	}
+
+	return doRequestBody(req)
+}
+
+// POST запрос, возвращающий тело
+func PostReqBody(url string, jsonData []byte) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, fmt.Errorf("error creating POST request: %s", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	return doRequestBody(req)
 }
 
 // POST запрос без обработки тела, возвращает только ошибку
@@ -50,25 +76,4 @@ func PostReq(url string, jsonData []byte) error {
 	}
 
 	return nil
-}
-
-// POST запрос, возвращающий тело
-func PostReqBody(url string, jsonData []byte) ([]byte, error) {
-	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonData))
-	if err != nil {
-		return nil, fmt.Errorf("error sending POST request: %s", err)
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("response by server non-OK: %v", resp.StatusCode)
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error read response body from GET request: %s", err)
-	}
-
-	return body, nil
 }
