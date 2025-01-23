@@ -50,7 +50,7 @@ func (c *Client) SendMsg(txt string) error {
 			log.Println("Error response description: ", jsonDataResp.Description)
 		}
 	} else {
-		log.Println("Emty body by sendMessage")
+		log.Println("Empty body by sendMessage")
 	}
 
 	return nil
